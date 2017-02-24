@@ -4,6 +4,8 @@ from django.db import models
 class Agreement(models.Model):
     _id = models.IntegerField(unique=True)
 
+    change_form_template = "admin/agreements_change_form.html"
+
 
 class Payment(models.Model):
     agreement = models.ForeignKey(Agreement)

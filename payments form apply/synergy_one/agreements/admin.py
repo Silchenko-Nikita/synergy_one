@@ -10,6 +10,7 @@ import requests
 
 
 class AgreementAdmin(admin.ModelAdmin):
+    fields = ('_id',)
     change_form_template = "admin/agreements_change_form.html"
 
     def change_view(self, request, object_id, extra_context=None, **kwargs):
@@ -22,15 +23,19 @@ class AgreementAdmin(admin.ModelAdmin):
                                                            extra_context=extra_context)
 
 
-        payments_json = requests.get('http://ip/API/VI/agreements/{0}/payment'.format(obj._id),
-                                     headers={'token': "some GUID"})
+        payments_json = requests.get('http://{ip}/API/VI/agreements/{obj_id}/payment'.format(
+            ip="127.0.0.1:8000/agreements", obj_id=obj._id), headers={'token': "some GUID"})
         payments_list = payments_json.json()
         payment_forms_list = []
-        for payment in payments_list:
-            payment_form = PaymentForm()
-            for k, v in payment.items():
-                payment_form.fields[k].initial = v
-            payment_forms_list.append(payment_form)
+
+        if isinstance(payments_list, dict) and payments_list.get("status", None) == "empty":
+            pass  # may be added some status var
+        elif isinstance(payments_list, list):
+            for payment in payments_list:
+                payment_form = PaymentForm()
+                for k, v in payment.items():
+                    payment_form.fields["_{0}".format(k) if k == 'id' else k].initial = v
+                payment_forms_list.append(payment_form)
 
         extra_context['payment_forms_list'] = payment_forms_list
         return super(AgreementAdmin, self).change_view(request, object_id,

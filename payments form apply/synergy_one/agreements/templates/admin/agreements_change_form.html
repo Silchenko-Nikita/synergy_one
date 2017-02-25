@@ -1,9 +1,22 @@
 {% extends "admin/change_form.html" %}
 {% block after_field_sets %}
     {{ block.super }}
-    <p>Payments:</p>
-    {% for form in payment_forms_list %}
-        <hr>
-        {{ form.as_p }}
-    {% endfor %}
+
+    {% if payment_forms_list %}
+        <p>Payments:</p>
+
+        {% for form in payment_forms_list %}
+            <table border="1px">
+                {% for field in form %}
+                    <tr>
+                        <td><b>{{ field.label }}:</b></td> <td>{{ field.value }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <br>
+        {% endfor %}
+    {% else %}
+        <p><b>No payments</b></p>
+    {% endif %}
+
 {% endblock %}

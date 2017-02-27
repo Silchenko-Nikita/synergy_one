@@ -16,6 +16,6 @@ def test_payments_return(request, agr_id):
     # HttpResponse("", status_code=HTTP_UNAUTHORIZED)
     payms_list = get_payments_list_from_data(payments_data_path, agr_id)
     if payms_list:
-        return HttpResponse(json.dumps(payms_list), status=HTTP_OK)
+        return HttpResponse(json.dumps(payms_list), content_type="application/json", status=HTTP_OK)
     else:
-        return HttpResponse("[]", status=HTTP_NO_CONTENT)
+        return HttpResponse("[]", content_type="application/json", status=HTTP_NO_CONTENT)

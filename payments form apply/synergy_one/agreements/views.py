@@ -1,30 +1,21 @@
+import json
+
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from agreements.utils import get_payments_list_from_data, HTTP_NO_CONTENT
+import os.path
+
+HTTP_OK = 200
+
+payments_data_path = os.path.abspath(os.path.join(__file__, os.pardir)) + '/data/payments.json'
 # Create your views here.
+
 def test_payments_return(request, agr_id):
-    if agr_id == "1":
-        return HttpResponse("""[
-            {
-                "id": 20,
-                "amount": 23.00,
-                "date": "2017-03-24"
-            },
-            {
-                "id": 21,
-                "amount": 25.00,
-                "date": "2017-03-25"
-            }
-        ]""")
-    elif agr_id == "22":
-        return HttpResponse("""[
-            {
-                "id": 10,
-                "amount": 120.00,
-                "date": "2017-04-17"
-            }
-        ]""")
+    # if request token header was not my_uuid
+    # HttpResponse("", status_code=HTTP_UNAUTHORIZED)
+    payms_list = get_payments_list_from_data(payments_data_path, agr_id)
+    if payms_list:
+        return HttpResponse(json.dumps(payms_list), status=HTTP_OK)
     else:
-        return HttpResponse("""{
-                        "status": "empty"
-                    }""")
+        return HttpResponse("[]", status=HTTP_NO_CONTENT)

@@ -2,19 +2,29 @@
 {% block after_field_sets %}
     {{ block.super }}
 
-    {% if payment_forms_list %}
-        <p>Payments:</p>
-
-        {% for form in payment_forms_list %}
-            <table border="1px">
+    {% if payments_got %}
+        <p><b>Payments:</b></p>
+        <table>
+            {% for form in payment_formset %}
+                <table border="1px">
                 {% for field in form %}
                     <tr>
                         <td><b>{{ field.label }}:</b></td> <td>{{ field.value }}</td>
                     </tr>
                 {% endfor %}
-            </table>
-            <br>
-        {% endfor %}
+                <br>
+            {% endfor %}
+        </table>
+{#        {% for form in payment_forms_list %}#}
+{#            <table border="1px">#}
+{#                {% for field in form %}#}
+{#                    <tr>#}
+{#                        <td><b>{{ field.label }}:</b></td> <td>{{ field.value }}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#            </table>#}
+{#            <br>#}
+{#        {% endfor %}#}
     {% else %}
         <p><b>No payments</b></p>
     {% endif %}
